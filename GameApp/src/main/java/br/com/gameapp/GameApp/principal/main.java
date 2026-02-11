@@ -68,7 +68,7 @@ public class main {
         listGames();
         System.out.println("Qual o id do jogo deseja remover?");
         var numIdentificacao = sc.nextInt();
-        Optional<Jogo> jogoDelete = repository.findByIdentificationNumber(numIdentificacao);
+        Optional<Jogo> jogoDelete = repository.findByNumIdentificacao(numIdentificacao);
 
         if (jogoDelete.isPresent()) {
             repository.delete(jogoDelete.get());
@@ -107,8 +107,11 @@ public class main {
                     .findFirst()
                     .orElse(null);
             var jogoBanco = repository.findByNumIdentificacao(id);
-            if (jogoEncontrado != null && jogoBanco == null) {
+            if (jogoEncontrado != null && jogoBanco.isEmpty()) {
                 repository.save(jogoEncontrado);
+                System.out.println("Jogo adicionado com sucesso!");
+            } else {
+                System.out.println("Não foi possível adicionar: Jogo já existe na biblioteca ou não foi encontrado.");
             }
         }
     }
