@@ -8,6 +8,7 @@ import br.com.gameapp.GameApp.service.ConverteDados;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,8 @@ public class main {
             var menu = """
                     1 - Buscar jogo 
                     2 - Listar jogos da biblioteca
-                    3 - Buscar jogo similar
+                    3 - Remover jogo da biblioteca
+                    4 - Buscar jogo similar
                  
                     0 - Sair                                 
                     """;
@@ -47,6 +49,9 @@ public class main {
                     listGames();
                     break;
                 case 3:
+                    removeGame();
+                    break;
+                case 4:
                     searchSimilarGames();
                     break;
                 case 0:
@@ -55,6 +60,21 @@ public class main {
                 default:
                     System.out.println("Opção inválida");
             }
+        }
+    }
+
+    private void removeGame() {
+        System.out.println("====Jogos na sua biblioteca atualmente====");
+        listGames();
+        System.out.println("Qual o id do jogo deseja remover?");
+        var numIdentificacao = sc.nextInt();
+        Optional<Jogo> jogoDelete = repository.findByIdentificationNumber(numIdentificacao);
+
+        if (jogoDelete.isPresent()) {
+            repository.delete(jogoDelete.get());
+            System.out.println("Jogo removido!");
+        } else {
+            System.out.println("Jogo não encontrado na sua biblioteca.");
         }
     }
 
