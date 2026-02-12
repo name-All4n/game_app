@@ -100,19 +100,35 @@ public class main {
         var response = sc.nextLine();
         if (response.equalsIgnoreCase("S")) {
             System.out.println("Digite o ID do Jogo: ");
-            var id = sc.nextInt();
-            var jogoEncontrado = gameList.stream()
-                    .filter(j -> j.getNumIdentificacao()
-                            .equals(id))
-                    .findFirst()
-                    .orElse(null);
-            var jogoBanco = repository.findByNumIdentificacao(id);
-            if (jogoEncontrado != null && jogoBanco.isEmpty()) {
-                repository.save(jogoEncontrado);
-                System.out.println("Jogo adicionado com sucesso!");
+            if (sc.hasNextInt()) {
+                int id = sc.nextInt();
+                sc.nextLine();
+
+                var jogoEncontrado = gameList.stream()
+                        .filter(j -> j.getNumIdentificacao()
+                                .equals(id))
+                        .findFirst();
+
+                if (jogoEncontrado.isPresent()) {
+                    var jogoBanco = repository.findByNumIdentificacao(id);
+
+                    if (jogoBanco.isEmpty()) {
+                        repository.save(jogoEncontrado.get());
+                        System.out.println("Jogo adicionado com sucesso!");
+                    } else {
+                        System.out.println("Este jogo já está na sua biblioteca.");
+                    }
+                } else {
+                    System.out.println("Não encontramos um jogo com o ID " + id + " na lista de busca.");
+                }
             } else {
-                System.out.println("Não foi possível adicionar: Jogo já existe na biblioteca ou não foi encontrado.");
+                System.out.println("Entrada inválida! Você deve digitar o número do ID.");
+                sc.nextLine();
             }
+        } else if (response.equalsIgnoreCase("N")) {
+            System.out.println("Entendido. Retornando ao menu principal...");
+        } else {
+            System.out.println("Opção inválida. Por favor, responda com 'S' para Sim ou 'N' para Não.");
         }
     }
 
@@ -141,16 +157,34 @@ public class main {
         var response = sc.nextLine();
         if (response.equalsIgnoreCase("S")) {
             System.out.println("Digite o ID do Jogo: ");
-            var id = sc.nextInt();
-            var jogoEncontrado = similarGames.stream()
-                    .filter(j -> j.getNumIdentificacao()
-                            .equals(id))
-                    .findFirst()
-                    .orElse(null);
-            var jogoBanco = repository.findByNumIdentificacao(id);
-            if (jogoEncontrado != null && jogoBanco == null) {
-                repository.save(jogoEncontrado);
+            if (sc.hasNextInt()) {
+                int id = sc.nextInt();
+                sc.nextLine();
+                var jogoEncontrado = similarGames.stream()
+                        .filter(j -> j.getNumIdentificacao()
+                                .equals(id))
+                        .findFirst();
+
+                if (jogoEncontrado.isPresent()) {
+                    var jogoBanco = repository.findByNumIdentificacao(id);
+
+                    if (jogoBanco.isEmpty()) {
+                        repository.save(jogoEncontrado.get());
+                        System.out.println("Jogo adicionado com sucesso!");
+                    } else {
+                        System.out.println("Este jogo já está na sua biblioteca.");
+                    }
+                } else {
+                    System.out.println("Não encontramos um jogo com o ID " + id + " na lista de busca.");
+                }
+            } else {
+                System.out.println("Entrada inválida! Você deve digitar o número do ID.");
+                sc.nextLine();
             }
+        } else if (response.equalsIgnoreCase("N")) {
+            System.out.println("Entendido. Retornando ao menu principal...");
+        } else {
+            System.out.println("Opção inválida. Por favor, responda com 'S' para Sim ou 'N' para Não.");
         }
     }
 }
